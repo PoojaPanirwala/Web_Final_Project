@@ -12,6 +12,7 @@ mongoose.connect(database.url);
 
 var Movie = require('./models/movies');
 
+
 // step 2 function1
 // method to add a new movie
 // working well
@@ -21,7 +22,23 @@ app.post('/api/movies', function (req, res) {
 	//console.log(req.body);
 	// on collection we apply .create(). So here Movie is the collection
 	Movie.create({
-		plot: req.body.plot
+		plot: req.body.plot,
+		genres: req.body.genres,
+		runtime: req.body.runtime,
+		cast: req.body.cast,
+		num_mflix_comments: req.body.num_mflix_comments,
+		title: req.body.title,
+		fullplot: req.body.fullplot,
+		countries: req.body.countries,
+		released: req.body.released,
+		directors: req.body.directors,
+		rated: req.body.rated,
+		awards: req.body.awards,
+		lastupdated: req.body.lastupdated,
+		year: req.body.year,
+		imdb: req.body.imdb,
+		type: req.body.type,
+		tomatoes: req.body.tomatoes
 	}, function (err, movies) {
 		if (err) {
 			res.send(err);
@@ -31,39 +48,33 @@ app.post('/api/movies', function (req, res) {
 		Movie.find(function (err, movies) {
 			if (err)
 				res.send(err)
-			res.json(movies);
+			//res.json(movies);
+			res.send("Added successfully!");
 		});
-
-
 	});
-
 });
 
 
 
 // method to get all the movies from db according to page, perPage and title	
 app.get('/api/movies', function (req, res) {
-	var perPage = req.query.perPage;
-	var page = Math.max(0, req.query.page);
+	var perPage = req.query.perPage || 0;
+	var page = req.query.page || 0;
 	// use mongoose to get all todos in the database
 	Movie.find()
-		.sort({
-			_id: 'asc'
-		})
-		.limit(perPage)
+		.sort({ _id: 1 })
 		.skip(perPage * page)
-
+		.limit(perPage)
 		.exec(function (err, movies) {
 			// if there is an error retrieving, send the error otherwise send data
 			if (err)
 				res.send(err)
-			res.json(movies); // return all movie in JSON format
+			res.json(movies); // return all movie in JSON format according to page no and perpage count
 		});
 });
 
 
-
-app.get('/api/movie/:movie_id', function (req, res) {
+app.get('/api/movies/:movie_id', function (req, res) {
 	// to get the id from req params as id is object type
 	var id = new mongoose.Types.ObjectId(req.params.movie_id);
 	// to get the id from mongosse type object
@@ -76,6 +87,21 @@ app.get('/api/movie/:movie_id', function (req, res) {
 
 });
 
+// to update a movie
+// working well
+app.put('/api/movies/:movie_id', function (req, res) {
+	// create mongose method to update an existing record into collection
+	console.log(req.body);
+	let id = req.params.movie_id;
+	var data = {
+		plot: req.body.plot
+	}
+	// save the user
+	Movie.findByIdAndUpdate(id, data, function (err, movie) {
+		if (err) throw err;
+		res.send('Successfully! Movie updated ');
+	});
+});
 
 // to get the id from req params as id is object type
 app.delete('/api/movies/:movie_id', function (req, res) {
@@ -91,38 +117,17 @@ app.delete('/api/movies/:movie_id', function (req, res) {
 	});
 });
 
-
-//
-
 // form to 
 app.use(express.urlencoded({ extended: true }));
 /** Show page with a form */
 app.post('/', (req, res) => {
 	res.send(`<form method="GET" action="/">
-<input type="text" name="page" placeholder="page">
-<input type="text" name="perPage" placeholder="perPage">
-<input type="text" name="title" placeholder="title">
-<input type="submit">
-</form>`);
+		<input type="text" name="page" placeholder="page">
+		<input type="text" name="perPage" placeholder="perPage">
+		<input type="text" name="title" placeholder="title">
+		<input type="submit">
+		</form>`);
 });
-
-/** Process POST request */
-// app.get('/', function (req, res) {
-// 	//res.send(JSON.stringify(req.body));
-
-// 	Person.
-// 		find({
-// 			title: 'The Avengers'
-// 		}, function (err, book) {
-// 			if (err)
-// 				res.send(err);
-// 			res.json(book);
-
-// 			// get and return all the employees after newly created employe record
-
-// 		});
-
-// });
 
 app.listen(port);
 console.log("App listening on port : " + port);

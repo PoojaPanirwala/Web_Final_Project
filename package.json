@@ -6,6 +6,26 @@
     "file-system": "^2.2.2",
     "handlebars": "^4.7.7",
     "mongoose": "^6.7.2",
-    "path": "^0.12.7"
-  }
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "promise": "^8.3.0"
+  },
+  "name": "web_final_project",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PoojaPanirwala/Web_Final_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PoojaPanirwala/Web_Final_Project/issues"
+  },
+  "homepage": "https://github.com/PoojaPanirwala/Web_Final_Project#readme",
+  "description": ""
 }
