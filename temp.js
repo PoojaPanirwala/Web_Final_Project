@@ -5,58 +5,52 @@ var port = process.env.PORT || 8000;
 app.use(bodyParser.urlencoded({ 'extended': 'true' }));            // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
-var mongoose = require('mongoose');
+var url = "mongodb+srv://root:secretpassword@cluster0.6bhud2z.mongodb.net/sample_mflix";
 
 //establish connection with database and initialize the movie model
 var db = require('./config/database1');
+db.initialize(url);
 
 // method to add a new movie
 app.post('/api/movies', function (req, res) {
-
-    // create mongose method to create a new record into collection
-    //console.log(req.body);
-    // on collection we apply .create(). So here Movie is the collections
-    db.addNewMovie(req.body)
-        .then(result => res.status(200).send(result))
-        .catch(err => res.status(500).send(err));
+    db.addNewMovie(req.body).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
+    });
 });
-
-
-// app.all(function (req, res) {
-//     db.initialize("mongodb+srv://root:secretpassword@cluster0.6bhud2z.mongodb.net/sample_mflix")
-//         .then(result => res.status(200).send(mongoose.connect(result)))
-//         .catch(err => res.status(500).send(err));
-//     console.log("connected");
-// });
 
 // method to get all the movies from db according to page, perPage and title	
 app.get('/api/movies', function (req, res) {
     var perPage = req.query.perPage || 0;
     var page = req.query.page || 0;
-    // use mongoose to get all todos in the database
-    Movie.find()
-        .sort({ _id: 1 })
-        .skip(perPage * page)
-        .limit(perPage)
-        .exec(function (err, movies) {
-            // if there is an error retrieving, send the error otherwise send data
-            if (err)
-                res.send(err)
-            res.json(movies); // return all movie in JSON format according to page no and perpage count
-        });
+    var _title = req.query.title;
+
+    if (_title.length > 0) {
+        page = 0;
+    }
+    db.getAllMovies(page, perPage, _title).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
+    });
 });
 
 
-app.get('/api/movie/:movie_id', function (req, res) {
+app.get('/api/movies/:movie_id', function (req, res) {
     // to get the id from req params as id is object type
-    var id = new mongoose.Types.ObjectId(req.params.movie_id);
-    // to get the id from mongosse type object
-    Movie.findById(id, function (err, movies) {
-        if (err)
-            res.send(err)
-        res.json(movies);
+    var id = req.params.movie_id;
+    db.getMovieById(id).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
     });
-
 });
 
 // to update a movie
