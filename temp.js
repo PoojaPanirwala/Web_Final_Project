@@ -55,31 +55,26 @@ app.get('/api/movies/:movie_id', function (req, res) {
 
 // to update a movie
 // working well
-app.put('/api/Movies/:movie_id', function (req, res) {
-    // create mongose method to update an existing record into collection
-    console.log(req.body);
+app.put('/api/movies/:movie_id', function (req, res) {
     let id = req.params.movie_id;
-    var data = {
-        plot: req.body.plot
-    }
-    // save the user
-    Movie.findByIdAndUpdate(id, data, function (err, movie) {
-        if (err) throw err;
-        res.send('Successfully! Movie updated ');
+    db.updateMovieById(req.body, id).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
     });
 });
 
 // to get the id from req params as id is object type
 app.delete('/api/movies/:movie_id', function (req, res) {
-    console.log(req.params.movie_id);
     let id = req.params.movie_id;
-    Movie.remove({
-        _id: id
-    }, function (err) {
-        if (err)
-            res.send(err);
-        else
-            res.send('Successfully! Movie has been Deleted.');
+    db.deleteMovieById(id).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
     });
 });
 

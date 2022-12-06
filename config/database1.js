@@ -8,7 +8,7 @@ function initialize(connection) {
         .then(function (result) {
             console.log("connection established..")
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err.message));
 }
 
 const addNewMovie = function (data) {
@@ -31,8 +31,12 @@ const addNewMovie = function (data) {
             imdb: data.imdb,
             type: data.type,
             tomatoes: data.tomatoes
-        })
-        resolve("Added successfully!");
+        }, function (err, movie) {
+            if (err) {
+                reject(err.message);
+            }
+            resolve("Movie has been added Successfully!");
+        });
     });
     return promise;
 };
@@ -48,7 +52,7 @@ const getAllMovies = function (page, perPage, _title) {
                 .limit(perPage)
                 .exec(function (err, movies) {
                     if (err)
-                        reject(err);
+                        reject(err.message);
                     resolve(movies);
                 });
         }
@@ -59,7 +63,7 @@ const getAllMovies = function (page, perPage, _title) {
                 .limit(perPage)
                 .exec(function (err, movies) {
                     if (err)
-                        reject(err);
+                        reject(err.message);
                     resolve(movies);
                 });
         }
@@ -69,8 +73,57 @@ const getAllMovies = function (page, perPage, _title) {
 
 const getMovieById = function (id) {
     var promise = new Promise(function (resolve, reject) {
-        var movies = Movie.findById(id)
-        resolve(movies);
+        var movies = Movie.findById(id, function (err, movie) {
+            if (err) {
+                reject(err.message);
+            }
+            resolve(movies);
+        });
+    });
+    return promise;
+}
+
+const updateMovieById = function (data, id) {
+    var data = {
+        plot: data.plot,
+        genres: data.genres,
+        runtime: data.runtime,
+        cast: data.cast,
+        num_mflix_comments: data.num_mflix_comments,
+        title: data.title,
+        fullplot: data.fullplot,
+        countries: data.countries,
+        released: data.released,
+        directors: data.directors,
+        rated: data.rated,
+        awards: data.awards,
+        lastupdated: data.lastupdated,
+        year: data.year,
+        imdb: data.imdb,
+        type: data.type,
+        tomatoes: data.tomatoes
+    }
+    var promise = new Promise(function (resolve, reject) {
+        Movie.findByIdAndUpdate(id, data, function (err, movie) {
+            if (err) {
+                reject(err.message);
+            }
+            resolve("Movie has been updated Successfully!");
+        });
+    });
+    return promise;
+}
+
+const deleteMovieById = function (id) {
+    var promise = new Promise(function (resolve, reject) {
+        Movie.remove({
+            _id: id
+        }, function (err, movie) {
+            if (err) {
+                reject(err.message);
+            }
+            resolve('Movie has been deleted Successfully!');
+        });
     });
     return promise;
 }
@@ -80,5 +133,7 @@ module.exports = {
     initialize,
     addNewMovie,
     getAllMovies,
-    getMovieById
+    getMovieById,
+    updateMovieById,
+    deleteMovieById
 };
