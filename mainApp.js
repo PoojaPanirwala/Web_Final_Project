@@ -5,11 +5,10 @@ var port = process.env.PORT || 8000;
 app.use(bodyParser.urlencoded({ 'extended': 'true' }));            // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
-var url = "mongodb+srv://root:secretpassword@cluster0.6bhud2z.mongodb.net/sample_mflix";
 
 //establish connection with database and initialize the movie model
-var db = require('./config/database1');
-db.initialize(url);
+var db = require('./config/movieController');
+db.initialize(process.env.ConnectionString);
 
 // method to add a new movie
 app.post('/api/movies', function (req, res) {
