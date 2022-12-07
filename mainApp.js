@@ -6,9 +6,51 @@ app.use(bodyParser.urlencoded({ 'extended': 'true' }));            // parse appl
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 
+var path = require('path');
+const exphbs = require('express-handlebars');
+
+app.use(express.static(path.join(__dirname, 'public')));//defines absolute path to access static data
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.hbs', exphbs.engine({ extname: '.hbs', layoutsDir: path.join(app.get('views'), 'layouts') }));//set up the handlebars for the app 
+app.set('view engine', 'hbs');
+
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+
+dotenv.config();
+
 //establish connection with database and initialize the movie model
 var db = require('./config/movieController');
-db.initialize(process.env.ConnectionString);
+db.initialize(process.env.CONNECTION_STRING);
+
+//establish connection with database and initialize the user model
+var userdb = require('./config/userController');
+
+app.get('/api', function (req, res) {
+    //res.sendFile(path.join(__dirname, 'views/login.hbs'))
+    res.render('login', { title: 'Login Page' });
+})
+
+app.post('/api/register', function (req, res){
+    userdb.register(req.body).then(function (result) {
+        res.status(200);
+        res.send(result);
+    }).catch(function (err) {
+        res.status(500);
+        res.send(err);
+    });
+})
+
+
+
+
+
+
+
 
 // method to add a new movie
 app.post('/api/movies', function (req, res) {
