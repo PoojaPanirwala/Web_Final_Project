@@ -35,17 +35,30 @@ app.get('/api', function (req, res) {
     res.render('login', { title: 'Login Page' });
 })
 
-app.post('/api/register', function (req, res){
-    userdb.register(req.body).then(function (result) {
+app.post('/api', function (req, res) {
+    userdb.login(req.body).then(function (result) {
         res.status(200);
-        res.send(result);
+        res.render('login', { title: 'Login Page', error: result });
     }).catch(function (err) {
         res.status(500);
-        res.send(err);
+        res.render('login', { title: 'Login Page', error: err });
     });
 })
 
+app.get('/api/register', function (req, res) {
+    //res.sendFile(path.join(__dirname, 'views/login.hbs'))
+    res.render('register', { title: 'Registration Page' });
+})
 
+app.post('/api/register', function (req, res) {
+    userdb.register(req.body).then(function (result) {
+        res.status(200);
+        res.render('register', { title: 'Registration Page', error: result });
+    }).catch(function (err) {
+        res.status(500);
+        res.render('register', { title: 'Registration Page', error: err });
+    });
+})
 
 
 
