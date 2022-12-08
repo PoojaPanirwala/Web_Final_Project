@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/users');
-
 async function register(data) {
 
     try {
@@ -25,15 +24,6 @@ async function register(data) {
         }
         //Encrypt user password
         let encryptedPassword = await bcrypt.hash(password, 10);
-
-        // Create user in our database
-        const user = await User.create({
-            firstname,
-            lastname,
-            email: email.toLowerCase(), // sanitize: convert email to lowercase
-            password: encryptedPassword,
-        });
-
         // Create token
         const token = jwt.sign(
             { user_id: user._id, email },
@@ -42,11 +32,20 @@ async function register(data) {
                 expiresIn: "2h",
             }
         );
+        // Create user in our database
+        const user = await User.create({
+            firstname,
+            lastname,
+            email: email.toLowerCase(), // sanitize: convert email to lowercase
+            password: encryptedPassword
+        });
+
+
         // save user token
         user.token = token;
-
+        localStorage.setItem("token", token);
         // return new user
-        return user;
+        return "success";
     } catch (err) {
         console.log("error ", JSON.stringify(err))
         return err;
@@ -76,9 +75,10 @@ async function login(data) {
             );
             // save user token
             user.token = token;
+            sessionStorage.setItem("token", token);
 
             // user
-            return user;
+            return "success";
         }
         return "Sorry, Check Your Credentials Again!";
     } catch (err) {

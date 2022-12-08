@@ -1,0 +1,50 @@
+<div class="container">
+    <h1> <i class="fa-sharp fa-solid fa-camera-movie"></i> Movies <small> - click on movie for details</small> <a
+            href="/api" class="btn btn-danger pull-right hide" id="back-to-bootsnipp">Back to Login</a><a
+            href="/api/search" class="btn btn-primary pull-right" id="back-to-bootsnipp" >Advanced Search</a></h1>
+    <hr>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Cover Page</th>
+                <th>Title</th>
+                <th>Genres</th>
+                <th>Languages</th>
+                <th>Directors</th>
+                <th>Rated</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{#each data}}
+            <tr>
+                {{#if poster}}
+                <td><img src={{poster}} height="70" width="70"></td>
+                {{else}}
+                <td><img src="https://m.media-amazon.com/images/M/MV5BMTMzMDcxMjgyNl5BMl5BanBnXkFtZTcwOTgxNjg4Mg@@._V1_SY1000_SX677_AL_.jpg"
+                        height="70" width="70"></td>
+                {{/if}}
+                <td>{{title}}</td>
+                <td>
+                    {{#each genres}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </td>
+                <td>
+                    {{#each languages}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </td>
+                <td>{{#each directors}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </td>
+                <td>{{rated}}</td>
+                <td>{{year}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

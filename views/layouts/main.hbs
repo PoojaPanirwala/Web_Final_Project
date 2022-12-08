@@ -17,6 +17,16 @@
             background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
             background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
         }
+
+        @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+
+        tbody>tr {
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -30,6 +40,29 @@
 
 </html>
 <script>
+    $(function () {
+        /* BOOTSNIPP FULLSCREEN FIX */
+        if (window.location == window.parent.location) {
+            $('#back-to-bootsnipp').removeClass('hide');
+            $('.alert').addClass('hide');
+        }
+
+        $('#fullscreen').on('click', function (event) {
+            event.preventDefault();
+            window.parent.location = "http://bootsnipp.com/iframe/Q60Oj";
+        });
+
+        $('tbody > tr').on('click', function (event) {
+            event.preventDefault();
+            $('#myModal').modal('show');
+        })
+
+        $('.btn-mais-info').on('click', function (event) {
+            $('.open_info').toggleClass("hide");
+        })
+
+
+    });
     $(function () {
         $('.button-checkbox').each(function () {
             var $widget = $(this),

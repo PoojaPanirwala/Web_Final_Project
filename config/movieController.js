@@ -41,6 +41,10 @@ const addNewMovie = function (data) {
     return promise;
 };
 
+// const getMovies = async () => {
+//     return await Movie.find({});
+// }
+
 const getAllMovies = function (page, perPage, _title) {
     var promise = new Promise(function (resolve, reject) {
         if (_title.length > 0) {
