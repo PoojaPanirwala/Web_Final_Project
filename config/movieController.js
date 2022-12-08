@@ -39,7 +39,7 @@ const addNewMovie = function (data) {
         });
     });
     return promise;
-};
+}
 
 // const getMovies = async () => {
 //     return await Movie.find({});
@@ -73,16 +73,12 @@ const getAllMovies = function (page, perPage, _title) {
         }
     });
     return promise;
-}
+};
 
 const getMovieById = function (id) {
     var promise = new Promise(function (resolve, reject) {
-        var movies = Movie.findById(id, function (err, movie) {
-            if (err) {
-                reject(err.message);
-            }
-            resolve(movies);
-        });
+        var movies = Movie.findById(id)
+        resolve(movies);
     });
     return promise;
 }
@@ -108,12 +104,9 @@ const updateMovieById = function (data, id) {
         tomatoes: data.tomatoes
     }
     var promise = new Promise(function (resolve, reject) {
-        Movie.findByIdAndUpdate(id, data, function (err, movie) {
-            if (err) {
-                reject(err.message);
-            }
-            resolve("Movie has been updated Successfully!");
-        });
+        Movie.findByIdAndUpdate(id, data).then(resolve("Movie has been updated Successfully!"))
+        .catch(err=>console.log(err.message))
+        
     });
     return promise;
 }
@@ -122,12 +115,8 @@ const deleteMovieById = function (id) {
     var promise = new Promise(function (resolve, reject) {
         Movie.remove({
             _id: id
-        }, function (err, movie) {
-            if (err) {
-                reject(err.message);
-            }
-            resolve('Movie has been deleted Successfully!');
-        });
+        })
+        resolve('Movie has been deleted Successfully!');
     });
     return promise;
 }

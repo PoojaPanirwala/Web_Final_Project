@@ -24,6 +24,14 @@ async function register(data) {
         }
         //Encrypt user password
         let encryptedPassword = await bcrypt.hash(password, 10);
+
+        // Create user in our database
+        const user = await User.create({
+            firstname,
+            lastname,
+            email: email.toLowerCase(), // sanitize: convert email to lowercase
+            password: encryptedPassword
+        });
         // Create token
         const token = jwt.sign(
             { user_id: user._id, email },
@@ -32,18 +40,11 @@ async function register(data) {
                 expiresIn: "2h",
             }
         );
-        // Create user in our database
-        const user = await User.create({
-            firstname,
-            lastname,
-            email: email.toLowerCase(), // sanitize: convert email to lowercase
-            password: encryptedPassword
-        });
-
 
         // save user token
         user.token = token;
-        localStorage.setItem("token", token);
+        console.log(token);
+        //localStorage.setItem("token", token);
         // return new user
         return "success";
     } catch (err) {
@@ -75,8 +76,8 @@ async function login(data) {
             );
             // save user token
             user.token = token;
-            sessionStorage.setItem("token", token);
-
+            //sessionStorage.setItem("token", token);
+            console.log(token);
             // user
             return "success";
         }
